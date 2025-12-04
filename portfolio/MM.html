@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Based Ordering System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #f5f5f7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 20px 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: #f5f5f7;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links a {
+            color: #f5f5f7;
+            text-decoration: none;
+            margin-left: 40px;
+            font-size: 14px;
+            font-weight: 400;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.6;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 120px 0 80px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,149,0,0.2) 0%, transparent 70%);
+            pointer-events: none;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .label {
+            display: inline-block;
+            background: rgba(255,149,0,0.1);
+            color: #ff9500;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255,149,0,0.3);
+        }
+
+        h1 {
+            font-size: 80px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+            line-height: 1.05;
+            color: #f5f5f7;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #ff9500, #ff6b00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 28px;
+            color: #a1a1a6;
+            margin-bottom: 40px;
+            line-height: 1.4;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+        }
+
+        .description {
+            font-size: 19px;
+            color: #86868b;
+            margin-bottom: 50px;
+            line-height: 1.6;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border-radius: 980px;
+            font-size: 17px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #ff9500;
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #ffaa33;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #ff9500;
+            border: 2px solid #ff9500;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,149,0,0.1);
+        }
+
+        .tech-stack {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tech-badge {
+            background: rgba(255,255,255,0.08);
+            padding: 8px 20px;
+            border-radius: 18px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #f5f5f7;
+            border: 1px solid rgba(255,255,255,0.12);
+            transition: all 0.3s;
+        }
+
+        .tech-badge:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateY(-2px);
+        }
+
+        .demo-section {
+            padding: 100px 0;
+            background: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
+        }
+
+        .demo-container {
+            display: flex;
+            align-items: center;
+            gap: 80px;
+            margin-bottom: 100px;
+        }
+
+        .demo-container:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .demo-content {
+            flex: 1;
+        }
+
+        .demo-visual {
+            flex: 1;
+            background: rgba(255,255,255,0.04);
+            border-radius: 24px;
+            padding: 60px;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+            font-size: 120px;
+        }
+
+        .demo-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+            color: #f5f5f7;
+        }
+
+        .demo-description {
+            font-size: 19px;
+            color: #a1a1a6;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .demo-features {
+            list-style: none;
+            padding: 0;
+        }
+
+        .demo-features li {
+            font-size: 17px;
+            color: #86868b;
+            margin-bottom: 12px;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .demo-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #ff9500;
+            font-weight: 600;
+        }
+
+        .features {
+            padding: 100px 0;
+            background: #000;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: 56px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -1.5px;
+            color: #f5f5f7;
+        }
+
+        .section-description {
+            font-size: 21px;
+            color: #86868b;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.04);
+            padding: 48px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(255,149,0,0.1), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .feature-card:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,149,0,0.3);
+            transform: translateY(-8px);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: 56px;
+            margin-bottom: 24px;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card h3 {
+            font-size: 28px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            color: #f5f5f7;
+            letter-spacing: -0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card p {
+            color: #a1a1a6;
+            line-height: 1.6;
+            font-size: 17px;
+            position: relative;
+            z-index: 1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 80px 0 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 100px;
+        }
+
+        .footer-content {
+            color: #86868b;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        .social-links a {
+            color: #ff9500;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .social-links a:hover {
+            opacity: 0.6;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: translateX(-50%) scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: translateX(-50%) scale(1.1);
+            }
+        }
+
+        @media (max-width: 968px) {
+            .demo-container {
+                flex-direction: column !important;
+                gap: 40px;
+            }
+
+            .demo-visual {
+                padding: 40px;
+                font-size: 80px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 48px;
+            }
+            
+            .subtitle {
+                font-size: 21px;
+            }
+
+            .description {
+                font-size: 17px;
+            }
+            
+            .section-title {
+                font-size: 40px;
+            }
+
+            .section-description {
+                font-size: 19px;
+            }
+
+            .demo-title {
+                font-size: 36px;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 0 20px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+
+            .feature-card {
+                padding: 32px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">QR Ordering</div>
+                <div class="nav-links">
+                    <a href="#overview">Overview</a>
+                    <a href="#features">Features</a>
+                    <a href="https://github.com/yourusername/qr-ordering" target="_blank">GitHub</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <span class="label">💼 Portfolio Project</span>
+            <h1><span class="gradient-text">QR Based</span><br>Ordering System</h1>
+            <p class="subtitle">Full-Stack Restaurant Solution</p>
+            <p class="description">A comprehensive ordering platform demonstrating expertise in Machine Learning, Vue.js, and Node.js. This project showcases end-to-end development skills from intelligent recommendations to seamless payment processing.</p>
+            
+            <div class="cta-buttons">
+                <a href="https://github.com/yourusername/qr-ordering" class="btn btn-primary" target="_blank">View Source Code</a>
+                <a href="#overview" class="btn btn-secondary">Explore Project</a>
+            </div>
+
+            <div class="tech-stack">
+                <span class="tech-badge">🤖 Machine Learning</span>
+                <span class="tech-badge">💚 Vue.js</span>
+                <span class="tech-badge">🟢 Node.js</span>
+                <span class="tech-badge">🗄️ MongoDB</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-section" id="overview">
+        <div class="container">
+            <div class="demo-container">
+                <div class="demo-content">
+                    <h2 class="demo-title">Frontend Development</h2>
+                    <p class="demo-description">Built a responsive customer-facing interface using Vue.js with dynamic menu rendering, real-time order updates, and smooth animations for an optimal user experience.</p>
+                    <ul class="demo-features">
+                        <li>Vue.js component architecture</li>
+                        <li>Vuex state management</li>
+                        <li>Responsive CSS design</li>
+                        <li>QR code integration</li>
+                    </ul>
+                </div>
+                <div class="demo-visual">
+                    💻
+                </div>
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-content">
+                    <h2 class="demo-title">Machine Learning Engine</h2>
+                    <p class="demo-description">Implemented recommendation algorithms that analyze historical order data to suggest menu items, demonstrating practical application of ML in production environments.</p>
+                    <ul class="demo-features">
+                        <li>Collaborative filtering algorithms</li>
+                        <li>Pattern recognition models</li>
+                        <li>Real-time prediction API</li>
+                        <li>Data preprocessing pipelines</li>
+                    </ul>
+                </div>
+                <div class="demo-visual">
+                    🧠
+                </div>
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-content">
+                    <h2 class="demo-title">Backend Architecture</h2>
+                    <p class="demo-description">Developed a scalable Node.js backend with RESTful APIs, JWT authentication, real-time WebSocket connections, and efficient database management using MongoDB.</p>
+                    <ul class="demo-features">
+                        <li>RESTful API design</li>
+                        <li>JWT authentication & authorization</li>
+                        <li>WebSocket real-time updates</li>
+                        <li>MongoDB schema design</li>
+                    </ul>
+                </div>
+                <div class="demo-visual">
+                    ⚙️
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Technical Highlights</h2>
+                <p class="section-description">Key skills and technologies demonstrated in this project</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🎨</span>
+                    <h3>Modern UI/UX</h3>
+                    <p>Crafted an intuitive interface with clean design principles, smooth transitions, and accessibility considerations for diverse users.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🔐</span>
+                    <h3>Secure Authentication</h3>
+                    <p>Implemented JWT-based authentication with password hashing, session management, and role-based access control for admin and staff.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <h3>Data Analytics</h3>
+                    <p>Built admin dashboard with interactive charts showing sales trends, popular items, and customer behavior insights using Chart.js.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">⚡</span>
+                    <h3>Real-Time Updates</h3>
+                    <p>Integrated WebSocket connections for instant order status notifications between kitchen, staff, and customers without page refresh.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">💳</span>
+                    <h3>Payment Integration</h3>
+                    <p>Connected payment gateway APIs with error handling, transaction logging, and secure payment processing workflows.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🧪</span>
+                    <h3>Testing & Deployment</h3>
+                    <p>Wrote unit tests, implemented CI/CD pipelines, and deployed the application using modern DevOps practices and cloud services.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>Developed as part of my portfolio to demonstrate full-stack capabilities</p>
+            </div>
+            <div class="social-links">
+                <a href="https://github.com/yourusername" target="_blank">GitHub</a>
+                <a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn</a>
+                <a href="mailto:your.email@example.com">Contact</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
